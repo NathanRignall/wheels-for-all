@@ -3,6 +3,7 @@ import { createServerClient } from "@/lib/supabase-server";
 import { getArray } from "@/lib/supabase-type-convert";
 import { Tag } from "@/components/ui";
 import { AddProductModal } from "./AddProductModal";
+import { RemoveProductModal } from "./RemoveProductModal";
 
 // do not cache this page
 export const revalidate = 0;
@@ -89,9 +90,10 @@ export default async function Products() {
                   </td>
 
                   <td className="px-4 text-right whitespace-nowrap">
-                    <Link href={`/console/products/${product.id}`} className="text-sm text-blue-600 hover:underline">
-                      View
-                    </Link>
+                    <RemoveProductModal
+                      productId={product.id}
+                      name={product.name}
+                    />
                   </td>
                 </tr>
               ))}

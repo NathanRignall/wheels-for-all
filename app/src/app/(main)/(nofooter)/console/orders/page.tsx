@@ -33,8 +33,7 @@ export default async function Orders({
       ),
       inserted_at
       `
-    )
-    .match({ company_id: params.companyId });
+    );
 
   const orders = getArray(_orders).map((order) => {
     return {

@@ -3,6 +3,7 @@ import { createServerClient } from "@/lib/supabase-server";
 import { getArray, getSingle } from "@/lib/supabase-type-convert";
 import { Tag } from "@/components/ui";
 import { AddEquipmentModal } from "./AddEquipmentModal";
+import { RemoveEquipmentModal } from "./RemoveEquipmentModal";
 
 // do not cache this page
 export const revalidate = 0;
@@ -80,9 +81,10 @@ export default async function Equipment() {
                   </td>
 
                   <td className="px-4 text-right whitespace-nowrap">
-                    <Link href={`/console/equipment/${equipment.id}`} className="text-sm text-blue-600 hover:underline">
-                      View
-                    </Link>
+                    <RemoveEquipmentModal
+                      equipmentId={equipment.id}
+                      name={equipment.equipment_type.name}
+                    />
                   </td>
                 </tr>
               ))}
