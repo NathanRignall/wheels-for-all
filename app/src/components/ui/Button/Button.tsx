@@ -3,7 +3,7 @@ import clsx from "clsx";
 export type ButtonProps = {
   id?: string;
   className?: string;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "success" | "danger";
   display?: "inline" | "block";
   size?: "sm" | "md" | "lg";
   onClick?: (() => void) | ((event: any) => any);
@@ -37,14 +37,9 @@ export const Button = ({
         size === "md" && "text-sm px-5 py-3",
         size === "lg" && "text-lg px-6 py-4",
         disabled && "cursor-not-allowed opacity-50",
-        active && variant === "primary" && "bg-slate-200 border-slate-400",
-        active && variant === "secondary" && "bg-slate-700 border-slate-500",
-        !active &&
-          variant === "primary" &&
-          "text-slate-900 bg-white border-slate-200 hover:bg-slate-200 hover:border-slate-400 dark:text-white dark:bg-slate-700 dark:border-slate-500 dark:hover:bg-slate-900 dark:hover:border-slate-700",
-        !active &&
-          variant === "secondary" &&
-          "text-white bg-slate-900 border-slate-700 hover:bg-slate-700 hover:border-slate-500 dark:text-white dark:bg-slate-700 dark:border-slate-500 dark:hover:bg-slate-900 dark:hover:border-slate-700",
+        variant === "primary" && "text-white bg-blue-600 border-blue-800 hover:bg-blue-500 hover:border-blue-700 dark:text-white dark:bg-blue-700 dark:border-blue-500 dark:hover:bg-blue-600 dark:hover:border-blue-700",
+        variant === "success" && "text-white bg-green-600 border-green-800 hover:bg-green-500 hover:border-green-700 dark:text-white dark:bg-green-700 dark:border-green-500 dark:hover:bg-green-600 dark:hover:border-green-700",
+        variant === "danger" && "text-white bg-red-600 border-red-800 hover:bg-red-500 hover:border-red-700 dark:text-white dark:bg-red-700 dark:border-red-500 dark:hover:bg-red-600 dark:hover:border-red-700",
         "font-medium rounded-lg border-2"
       )}
       onClick={onClick}

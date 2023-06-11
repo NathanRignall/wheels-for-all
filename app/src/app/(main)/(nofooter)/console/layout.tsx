@@ -31,7 +31,7 @@ export default async function AdminLayout({
             Employee Console
           </h2>
 
-          <ul className=" px-3 py-4 border-b-2 space-y-2 border-slate-200 dark:border-slate-600">
+          <ul className=" px-3 py-4 space-y-2 dark:border-slate-600">
             {Links.map((link) => (
               <li key={link.href}>
                 <Link
@@ -44,25 +44,6 @@ export default async function AdminLayout({
                 </Link>
               </li>
             ))}
-          </ul>
-
-          <ul className="px-3 py-4 border-b-2 space-y-2 border-slate-200 dark:border-slate-600">
-            <li>
-              <Link
-                className="px-4 py-1 block rounded-lg text-lg text-slate-900 dark:text-white"
-                href="/about/documentation"
-              >
-                Documentation
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="px-4 py-1 block rounded-lg text-lg text-slate-900 dark:text-white"
-                href="/about/contact"
-              >
-                Help
-              </Link>
-            </li>
           </ul>
         </div>
       </aside>

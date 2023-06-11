@@ -45,8 +45,8 @@ export const AddCustomerModal = () => {
 
   interface FormValues {
     email: string;
-    givenName: string;
-    familyName: string;
+    given_name: string;
+    family_name: string;
     address_line_1: string;
     address_line_2: string;
     city: string;
@@ -56,8 +56,8 @@ export const AddCustomerModal = () => {
 
   const initialValues: FormValues = {
     email: "",
-    givenName: "",
-    familyName: "",
+    given_name: "",
+    family_name: "",
     address_line_1: "",
     address_line_2: "",
     city: "",
@@ -67,8 +67,8 @@ export const AddCustomerModal = () => {
 
   const validationSchema = object({
     email: string().email().required("Email is required"),
-    givenName: string().required("First Name is required"),
-    familyName: string().required("Last Name is required"),
+    given_name: string().required("First Name is required"),
+    family_name: string().required("Last Name is required"),
     address_line_1: string().required("Address Line 1 is required"),
     address_line_2: string(),
     city: string().required("City is required"),
@@ -78,7 +78,7 @@ export const AddCustomerModal = () => {
 
   const onSubmit = async (values: FormValues) => {
 
-    const { error } = await supabase.functions.invoke("invite-add-user", {
+    const { error } = await supabase.functions.invoke("invite-add-customer", {
       body: JSON.stringify({
         customer: values,
       }),
@@ -134,44 +134,44 @@ export const AddCustomerModal = () => {
             <div className="flex space-x-2 w-full mb-4">
               <div className="grow">
                 <label
-                  htmlFor="givenName"
+                  htmlFor="given_name"
                   className="block mb-2 text-sm font-medium text-slate-600 dark:text-slate-300"
                 >
                   First Name
                 </label>
                 <Field
-                  id="givenName"
+                  id="given_name"
                   type="text"
-                  name="givenName"
+                  name="given_name"
                   placeholder="First Name..."
                   className="relative block w-full rounded-md border-2 px-4 py-3 text-md text-slate-900 placeholder-slate-400 border-slate-200 dark:text-white dark:bg-slate-800 dark:placeholder-slate-300 dark:border-slate-600"
                 />
 
-                {errors.givenName && touched.givenName && (
+                {errors.given_name && touched.given_name && (
                   <p className="mt-2 text-sm text-red-600 dark:text-red-300">
-                    {errors.givenName}
+                    {errors.given_name}
                   </p>
                 )}
               </div>
 
               <div className="grow">
                 <label
-                  htmlFor="familyName"
+                  htmlFor="family_name"
                   className="block mb-2 text-sm font-medium text-slate-600 dark:text-slate-300"
                 >
                   Last Name
                 </label>
                 <Field
-                  id="familyName"
+                  id="family_name"
                   type="text"
-                  name="familyName"
+                  name="family_name"
                   placeholder="Last Name..."
                   className="relative block w-full rounded-md border-2 px-4 py-3 text-md text-slate-900 placeholder-slate-400 border-slate-200 dark:text-white dark:bg-slate-800 dark:placeholder-slate-300 dark:border-slate-600"
                 />
 
-                {errors.familyName && touched.familyName && (
+                {errors.family_name && touched.family_name && (
                   <p className="mt-2 text-sm text-red-600 dark:text-red-300">
-                    {errors.familyName}
+                    {errors.family_name}
                   </p>
                 )}
               </div>
@@ -295,9 +295,12 @@ export const AddCustomerModal = () => {
               )}
             </div>
 
-            <div className="mb-6 text-right">
-              <Button variant="secondary" type="submit">
+            <div className="text-right">
+              <Button variant="success" type="submit" className="mr-2">
                 Create
+              </Button>
+              <Button variant="danger" onClick={toggleModal}>
+                Cancel
               </Button>
 
               <div className="text-center">

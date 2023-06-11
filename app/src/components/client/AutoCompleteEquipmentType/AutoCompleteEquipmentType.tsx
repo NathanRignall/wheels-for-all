@@ -7,20 +7,20 @@ import { useField } from "formik";
 
 type Option = {
   id: string;
-  email: string;
-  given_name: string | null;
-  family_name: string | null;
-};
-
-export type AutoCompleteEmailProps = {
-  initialSearch?: string;
   name: string;
 };
 
-export const AutoCompleteEmail = ({
+export type AutoCompleteEquipmentTypeProps = {
+  initialSearch?: string;
+  name: string;
+  label?: boolean;
+};
+
+export const AutoCompleteEquipmentType = ({
   initialSearch,
   name,
-}: AutoCompleteEmailProps) => {
+  label = true,
+}: AutoCompleteEquipmentTypeProps) => {
   const { supabase } = useSupabase();
   const [field, meta, helpers] = useField(name);
 
@@ -31,9 +31,7 @@ export const AutoCompleteEmail = ({
   const ref = useRef();
 
   const select = (index: number) => {
-    setSearch(
-      `${optionsList[index].given_name} ${optionsList[index].family_name}`
-    );
+    setSearch(optionsList[index].name);
     helpers.setValue(optionsList[index].id);
     setShowOptions(false);
   };
@@ -41,9 +39,9 @@ export const AutoCompleteEmail = ({
   const handleChange = (text: string) => {
     const getOptions = async () => {
       const { data, error } = await supabase
-        .from("customers")
-        .select("id, email, given_name, family_name")
-        .ilike("email", `%${text}%`)
+        .from("equipment_types")
+        .select("id, name")
+        .ilike("name", `%${text}%`)
         .limit(10);
 
       if (error) {
@@ -115,12 +113,12 @@ export const AutoCompleteEmail = ({
     // @ts-ignore
     <div className="relative w-full " ref={ref}>
       <div className="w-full">
-        <label
+        {label && <label
           htmlFor="profile"
           className="block mb-2 text-sm font-medium text-gray-600 dark:text-slate-300"
         >
-          User
-        </label>
+          Equipment Type
+        </label>}
         <input
           id="profile"
           type="text"
@@ -161,7 +159,7 @@ export const AutoCompleteEmail = ({
                 key={option.id}
                 onClick={() => select(index)}
               >
-                {option.given_name} {option.family_name} - {option.email}
+                {option.name}
               </li>
             );
           })

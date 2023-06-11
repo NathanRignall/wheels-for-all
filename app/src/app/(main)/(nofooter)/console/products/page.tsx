@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createServerClient } from "@/lib/supabase-server";
 import { getArray } from "@/lib/supabase-type-convert";
 import { Tag } from "@/components/ui";
+import { AddProductModal } from "./AddProductModal";
 
 // do not cache this page
 export const revalidate = 0;
@@ -31,6 +32,8 @@ export default async function Products() {
       </h1>
 
       <section className="mt-4">
+        <AddProductModal />
+
         <div className="mt-4 border-2 rounded-lg overflow-hidden border-slate-200 dark:border-slate-600">
           <table className="w-full text-left divide-y-2 divide-slate-200 dark:divide-slate-600">
             <thead className="text-xs font-semibold uppercase text-slate-500 bg-slate-50 dark:text-slate-200 dark:bg-slate-700">

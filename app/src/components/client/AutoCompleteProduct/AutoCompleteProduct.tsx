@@ -7,20 +7,18 @@ import { useField } from "formik";
 
 type Option = {
   id: string;
-  email: string;
-  given_name: string | null;
-  family_name: string | null;
+  name: string;
 };
 
-export type AutoCompleteEmailProps = {
+export type AutoCompleteProductProps = {
   initialSearch?: string;
   name: string;
 };
 
-export const AutoCompleteEmail = ({
+export const AutoCompleteProduct = ({
   initialSearch,
   name,
-}: AutoCompleteEmailProps) => {
+}: AutoCompleteProductProps) => {
   const { supabase } = useSupabase();
   const [field, meta, helpers] = useField(name);
 
@@ -31,9 +29,7 @@ export const AutoCompleteEmail = ({
   const ref = useRef();
 
   const select = (index: number) => {
-    setSearch(
-      `${optionsList[index].given_name} ${optionsList[index].family_name}`
-    );
+    setSearch(optionsList[index].name);
     helpers.setValue(optionsList[index].id);
     setShowOptions(false);
   };
@@ -41,9 +37,9 @@ export const AutoCompleteEmail = ({
   const handleChange = (text: string) => {
     const getOptions = async () => {
       const { data, error } = await supabase
-        .from("customers")
-        .select("id, email, given_name, family_name")
-        .ilike("email", `%${text}%`)
+        .from("products")
+        .select("id, name")
+        .ilike("name", `%${text}%`)
         .limit(10);
 
       if (error) {
@@ -117,9 +113,9 @@ export const AutoCompleteEmail = ({
       <div className="w-full">
         <label
           htmlFor="profile"
-          className="block mb-2 text-sm font-medium text-gray-600 dark:text-slate-300"
+          className="block mb-2 text-sm font-medium text-gray-600 dark:text-slate-300 sr-only"
         >
-          User
+          Product Name
         </label>
         <input
           id="profile"
@@ -161,7 +157,7 @@ export const AutoCompleteEmail = ({
                 key={option.id}
                 onClick={() => select(index)}
               >
-                {option.given_name} {option.family_name} - {option.email}
+                {option.name}
               </li>
             );
           })

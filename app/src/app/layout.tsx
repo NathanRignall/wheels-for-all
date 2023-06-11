@@ -10,8 +10,8 @@ export const revalidate = 0;
 
 // metadata
 export const metadata = {
-  title: "Oscar Ox",
-  description: "The website for amateur theatre in Oxford",
+  title: "Wheels for All",
+  description: "Specialist in the hire of bikes and scooters",
 };
 
 // layout

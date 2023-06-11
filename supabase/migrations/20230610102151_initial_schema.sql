@@ -189,24 +189,35 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
  RETURNS trigger
  LANGUAGE plpgsql
  SECURITY DEFINER
-AS $function$
-begin
-  if (new.raw_user_meta_data->>'employee') is not null then
-    return new;
-  end if;
-  if (new.raw_user_meta_data->>'email') is null then
-    raise exception 'Email is required';
-  end if;
-  if (new.raw_user_meta_data->>'given_name') is null then
-    raise exception 'Given name is required';
-  end if;
-  if (new.raw_user_meta_data->>'family_name') is null then
-    raise exception 'Family name is required';
-  end if;
-
-  insert into public.customers (email, given_name, family_name)
-  values (new.raw_user_meta_data->>'email', new.raw_user_meta_data->>'given_name', new.raw_user_meta_data->>'family_name');
-  return new;
+AS $function$ begin if (new.raw_user_meta_data->>'employee') is not null then return new;
+end if;
+if (new.email) is null then raise exception 'Email is required';
+end if;
+if (new.raw_user_meta_data->>'given_name') is null then raise exception 'Given name is required';
+end if;
+if (new.raw_user_meta_data->>'family_name') is null then raise exception 'Family name is required';
+end if;
+insert into public.customers (
+    email,
+    given_name,
+    family_name,
+    address_line_1,
+    address_line_2,
+    city,
+    postcode,
+    country
+  )
+values (
+    new.email,
+    new.raw_user_meta_data->>'given_name',
+    new.raw_user_meta_data->>'family_name',
+    new.raw_user_meta_data->>'address_line_1',
+    new.raw_user_meta_data->>'address_line_2',
+    new.raw_user_meta_data->>'city',
+    new.raw_user_meta_data->>'postcode',
+    new.raw_user_meta_data->>'country'
+  );
+return new;
 end;
 $function$
 ;

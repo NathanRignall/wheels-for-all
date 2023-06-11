@@ -11,7 +11,7 @@ create table public.employees (
   family_name text not null,
   role public.employee_role not null default 'user',
   inserted_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
   constraint given_name_length check (char_length(given_name) >= 2),
   constraint family_name_length check (char_length(family_name) >= 2)
 );
@@ -28,7 +28,7 @@ create table public.customers (
   postcode text,
   country text,
   inserted_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
   constraint given_name_length check (char_length(given_name) >= 2),
   constraint family_name_length check (char_length(family_name) >= 2)
 );
@@ -81,7 +81,6 @@ create table public.hires (
   inserted_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
-
 -- create table for products
 create table public.products (
   id uuid primary key default uuid_generate_v4(),
@@ -110,45 +109,56 @@ create table purchases (
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
-ALTER DEFAULT PRIVILEGES REVOKE EXECUTE ON FUNCTIONS FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES REVOKE EXECUTE ON FUNCTIONS
+FROM PUBLIC;
 
 -- create a customer when a new user is created
-create function public.handle_new_user()
-returns trigger as
-$$
-begin
-  if (new.raw_user_meta_data->>'employee') is not null then
-    return new;
-  end if;
-  if (new.email) is null then
-    raise exception 'Email is required';
-  end if;
-  if (new.raw_user_meta_data->>'given_name') is null then
-    raise exception 'Given name is required';
-  end if;
-  if (new.raw_user_meta_data->>'family_name') is null then
-    raise exception 'Family name is required';
-  end if;
-
-  insert into public.customers (email, given_name, family_name)
-  values (new.email, new.raw_user_meta_data->>'given_name', new.raw_user_meta_data->>'family_name');
-  return new;
+create function public.handle_new_user() returns trigger as $$ begin if (new.raw_user_meta_data->>'employee') is not null then return new;
+end if;
+if (new.email) is null then raise exception 'Email is required';
+end if;
+if (new.raw_user_meta_data->>'given_name') is null then raise exception 'Given name is required';
+end if;
+if (new.raw_user_meta_data->>'family_name') is null then raise exception 'Family name is required';
+end if;
+insert into public.customers (
+    email,
+    given_name,
+    family_name,
+    address_line_1,
+    address_line_2,
+    city,
+    postcode,
+    country
+  )
+values (
+    new.email,
+    new.raw_user_meta_data->>'given_name',
+    new.raw_user_meta_data->>'family_name',
+    new.raw_user_meta_data->>'address_line_1',
+    new.raw_user_meta_data->>'address_line_2',
+    new.raw_user_meta_data->>'city',
+    new.raw_user_meta_data->>'postcode',
+    new.raw_user_meta_data->>'country'
+  );
+return new;
 end;
 $$ language plpgsql security definer;
 
 create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
-
+after
+insert on auth.users for each row execute procedure public.handle_new_user();
 GRANT execute ON FUNCTION public.handle_new_user() TO PUBLIC;
 
 -- -- Set up storage -- --
 
 -- create a bucket for media
-insert into storage.buckets (id, name) values ('media', 'media');
-
-create policy "Anyone can view a piece of meida" on storage.objects 
-  for select using ( bucket_id = 'media' );
-
-create policy "Anyone authenticated can insert a piece of media" on storage.objects
-  for insert with check ((bucket_id = 'media') AND (auth.role() = 'authenticated'));
+insert into storage.buckets (id, name)
+values ('media', 'media');
+create policy "Anyone can view a piece of meida" on storage.objects for
+select using (bucket_id = 'media');
+create policy "Anyone authenticated can insert a piece of media" on storage.objects for
+insert with check (
+    (bucket_id = 'media')
+    AND (auth.role() = 'authenticated')
+  );
