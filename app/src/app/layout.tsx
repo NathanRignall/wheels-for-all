@@ -3,7 +3,6 @@ import "server-only";
 import "./globals.css";
 import { createServerClient } from "@/lib/supabase-server";
 import { SupabaseListener, SupabaseProvider } from "@/components/client";
-import { Logger } from "./Logger";
 
 // do not cache this layout
 export const revalidate = 0;
@@ -35,8 +34,6 @@ export default async function RootLayout({
           {children}
         </SupabaseProvider>
       </body>
-
-      <Logger />
     </html>
   );
 }

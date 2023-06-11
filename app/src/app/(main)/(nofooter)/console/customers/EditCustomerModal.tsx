@@ -1,14 +1,33 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useSupabase, AutoCompleteEmail } from "@/components/client";
-import { getArray } from "@/lib/supabase-type-convert";
-import { object, string, boolean } from "yup";
+import { useSupabase } from "@/components/client";
+import { object, string } from "yup";
 import { FormikProps, Formik, Field, Form } from "formik";
 import { Button, Modal } from "@/components/ui";
-export const AddCustomerModal = () => {
-  const { supabase } = useSupabase();
+
+type Customer = {
+  email: string;
+  given_name: string | null;
+  family_name: string | null;
+  address_line_1: string | null;
+  address_line_2: string | null;
+  city: string | null;
+  postcode: string | null;
+  country: string | null;
+}
+
+type EditCustomerModalProps = {
+  customerId: string;
+  customer: Customer;
+};
+
+export const EditCustomerModal = ({
+  customerId,
+  customer
+}: EditCustomerModalProps) => {
+  const { supabase, session } = useSupabase();
 
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -32,14 +51,14 @@ export const AddCustomerModal = () => {
   }
 
   const initialValues: FormValues = {
-    email: "",
-    given_name: "",
-    family_name: "",
-    address_line_1: "",
-    address_line_2: "",
-    city: "",
-    postcode: "",
-    country: "United Kingdom",
+    email: customer.email,
+    given_name: customer.given_name || "",
+    family_name: customer.family_name || "",
+    address_line_1: customer.address_line_1 || "",
+    address_line_2: customer.address_line_2 || "",
+    city: customer.city || "",
+    postcode: customer.postcode || "",
+    country: customer.country || "",
   };
 
   const validationSchema = object({
@@ -54,12 +73,19 @@ export const AddCustomerModal = () => {
   });
 
   const onSubmit = async (values: FormValues) => {
-
-    const { error } = await supabase.functions.invoke("invite-add-customer", {
-      body: JSON.stringify({
-        customer: values,
-      }),
-    });
+    const { error } = await supabase
+      .from("customers")
+      .update({
+        email: values.email,
+        given_name: values.given_name,
+        family_name: values.family_name,
+        address_line_1: values.address_line_1,
+        address_line_2: values.address_line_2,
+        city: values.city,
+        postcode: values.postcode,
+        country: values.country,
+      })
+      .match({ id: customerId });
 
     if (error) {
       setFormError(error.message);
@@ -72,11 +98,11 @@ export const AddCustomerModal = () => {
       });
     }
   };
-
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen} button="Add Customer">
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} button="Edit" buttonVariant="success"
+      buttonSize="sm">
       <div className="text-3xl font-bold mb-6 text-slate-900 dark:text-white">
-        Add Customer
+        Edit production
       </div>
 
       <Formik
@@ -84,7 +110,7 @@ export const AddCustomerModal = () => {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        {({ errors, touched, values }: FormikProps<FormValues>) => (
+        {({ errors, touched }: FormikProps<FormValues>) => (
           <Form>
             <div className="mb-4">
               <label
@@ -262,7 +288,7 @@ export const AddCustomerModal = () => {
                 placeholder="Country..."
                 className="relative block w-full rounded-md border-2 px-4 py-3 text-md text-slate-900 placeholder-slate-400 border-slate-200 dark:text-white dark:bg-slate-800 dark:placeholder-slate-300 dark:border-slate-600">
                 <option value="United Kingdom
-                        ">United Kingdom</option>
+                      ">United Kingdom</option>
               </Field>
 
               {errors.country && touched.country && (
@@ -274,7 +300,7 @@ export const AddCustomerModal = () => {
 
             <div className="text-right">
               <Button variant="success" type="submit" className="mr-2">
-                Create
+                Save
               </Button>
               <Button variant="danger" onClick={toggleModal}>
                 Cancel

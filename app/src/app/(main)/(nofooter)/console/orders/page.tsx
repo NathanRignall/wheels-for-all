@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { createServerClient } from "@/lib/supabase-server";
 import { getArray, getSingle } from "@/lib/supabase-type-convert";
-import { Tag } from "@/components/ui";
+import { Button, Tag } from "@/components/ui";
+import { CheckoutModal } from "./AddChekoutModal";
 
 // do not cache this page
 export const revalidate = 0;
@@ -53,6 +54,8 @@ export default async function Orders({
       </h1>
 
       <section className="mt-4">
+        <CheckoutModal />
+        
         <div className="mt-4 border-2 rounded-lg overflow-hidden border-slate-200 dark:border-slate-600">
           <table className="w-full text-left divide-y-2 divide-slate-200 dark:divide-slate-600">
             <thead className="text-xs font-semibold uppercase text-slate-500 bg-slate-50 dark:text-slate-200 dark:bg-slate-700">
@@ -86,9 +89,9 @@ export default async function Orders({
                 >
                   <th
                     scope="row"
-                    className="px-4 py-4 font-bold whitespace-nowrap text-slate-900 dark:text-white"
+                    className="px-4 py-4 font-bold whitespace-nowrap text-slate-900 dark:text-white underline cursor-pointer"
                   >
-                    {`${order.customer.given_name} ${order.customer.family_name}`}
+                    <Link href={`/console/orders/${order.id}`}>{`${order.customer.given_name} ${order.customer.family_name}`}</Link>
                   </th>
 
                   <td className="px-4 py-4 max-w-sm whitespace-nowrap">
@@ -110,21 +113,13 @@ export default async function Orders({
                   </td>
 
                   <td className="px-4 text-right whitespace-nowrap">
-                    <Tag text="Test" variant="green" />
+                    <Tag text="New" variant="green" />
                   </td>
 
-                  <td className="px-4 py-4 text-right">
-                    <Link href={`/console/orders/${order.id}`} className="text-sm text-blue-600 hover:underline">
-                      View
-                    </Link>
-                    {" | "}
-                    <Link href={`/console/orders/${order.id}/edit`} className="text-sm text-blue-600 hover:underline">
-                      Edit
-                    </Link>
-                    {" | "}
-                    <Link href={`/console/orders/${order.id}/delete`} className="text-sm text-blue-600 hover:underline">
+                  <td className="px-4 text-right">
+                    <Button size="sm">
                       Process
-                    </Link>
+                    </Button>
                   </td>
                 </tr>
               ))}

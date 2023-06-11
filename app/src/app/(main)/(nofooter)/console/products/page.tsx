@@ -4,6 +4,7 @@ import { getArray } from "@/lib/supabase-type-convert";
 import { Tag } from "@/components/ui";
 import { AddProductModal } from "./AddProductModal";
 import { RemoveProductModal } from "./RemoveProductModal";
+import { EditProductModal } from "./EditProductModal";
 
 // do not cache this page
 export const revalidate = 0;
@@ -19,6 +20,7 @@ export default async function Products() {
       id,
       name,
       description,
+      image_url,
       price,
       stock
       `
@@ -86,10 +88,21 @@ export default async function Products() {
                   </td>
 
                   <td className="px-4 text-right whitespace-nowrap">
-                    <Tag text="Test" variant="green" />
+                    {
+                      product.stock > 0 ? (
+                        <Tag variant="green" text="In Stock" />
+                      ): (
+                        <Tag variant="red" text="Out Of Stock" />
+                      )
+                    }
                   </td>
 
                   <td className="px-4 text-right whitespace-nowrap">
+                    <EditProductModal
+                      productId={product.id}
+                      product={product}
+                    />
+                    {" "}
                     <RemoveProductModal
                       productId={product.id}
                       name={product.name}

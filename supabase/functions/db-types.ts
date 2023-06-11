@@ -34,296 +34,216 @@ export interface Database {
   }
   public: {
     Tables: {
-      categories: {
+      customers: {
         Row: {
+          address_line_1: string | null
+          address_line_2: string | null
+          city: string | null
+          country: string | null
+          email: string
+          family_name: string | null
+          given_name: string | null
           id: string
           inserted_at: string
-          title: string
+          postcode: string | null
           updated_at: string
         }
         Insert: {
+          address_line_1?: string | null
+          address_line_2?: string | null
+          city?: string | null
+          country?: string | null
+          email: string
+          family_name?: string | null
+          given_name?: string | null
           id?: string
           inserted_at?: string
-          title: string
+          postcode?: string | null
           updated_at?: string
         }
         Update: {
+          address_line_1?: string | null
+          address_line_2?: string | null
+          city?: string | null
+          country?: string | null
+          email?: string
+          family_name?: string | null
+          given_name?: string | null
           id?: string
           inserted_at?: string
-          title?: string
+          postcode?: string | null
           updated_at?: string
         }
       }
-      companies: {
+      employees: {
         Row: {
-          description: string
-          id: string
-          inserted_at: string
-          is_public: boolean
-          is_verified: boolean
-          main_colour: string
-          name: string
-          slug: string
-          theme: Database["public"]["Enums"]["page_theme"]
-          updated_at: string
-        }
-        Insert: {
-          description: string
-          id?: string
-          inserted_at?: string
-          is_public?: boolean
-          is_verified?: boolean
-          main_colour?: string
-          name: string
-          slug: string
-          theme?: Database["public"]["Enums"]["page_theme"]
-          updated_at?: string
-        }
-        Update: {
-          description?: string
-          id?: string
-          inserted_at?: string
-          is_public?: boolean
-          is_verified?: boolean
-          main_colour?: string
-          name?: string
-          slug?: string
-          theme?: Database["public"]["Enums"]["page_theme"]
-          updated_at?: string
-        }
-      }
-      company_members: {
-        Row: {
-          company_id: string
-          inserted_at: string
-          profile_id: string
-          role: Database["public"]["Enums"]["company_role"]
-          updated_at: string
-        }
-        Insert: {
-          company_id: string
-          inserted_at?: string
-          profile_id: string
-          role?: Database["public"]["Enums"]["company_role"]
-          updated_at?: string
-        }
-        Update: {
-          company_id?: string
-          inserted_at?: string
-          profile_id?: string
-          role?: Database["public"]["Enums"]["company_role"]
-          updated_at?: string
-        }
-      }
-      events: {
-        Row: {
-          end_time: string | null
-          id: string
-          inserted_at: string
-          production_id: string
-          start_time: string
-          ticket_link: string | null
-          updated_at: string
-          venue_id: string
-        }
-        Insert: {
-          end_time?: string | null
-          id?: string
-          inserted_at?: string
-          production_id: string
-          start_time: string
-          ticket_link?: string | null
-          updated_at?: string
-          venue_id: string
-        }
-        Update: {
-          end_time?: string | null
-          id?: string
-          inserted_at?: string
-          production_id?: string
-          start_time?: string
-          ticket_link?: string | null
-          updated_at?: string
-          venue_id?: string
-        }
-      }
-      pages: {
-        Row: {
-          company_id: string
-          id: string
-          inserted_at: string
-          is_published: boolean
-          slug: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          company_id: string
-          id?: string
-          inserted_at?: string
-          is_published?: boolean
-          slug: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          company_id?: string
-          id?: string
-          inserted_at?: string
-          is_published?: boolean
-          slug?: string
-          title?: string
-          updated_at?: string
-        }
-      }
-      participant_roles: {
-        Row: {
-          participant_id: string
-          role_id: string
-        }
-        Insert: {
-          participant_id: string
-          role_id: string
-        }
-        Update: {
-          participant_id?: string
-          role_id?: string
-        }
-      }
-      participants: {
-        Row: {
-          category_id: string | null
-          id: string
-          inserted_at: string
-          production_id: string
-          profile_id: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          category_id?: string | null
-          id?: string
-          inserted_at?: string
-          production_id: string
-          profile_id: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          category_id?: string | null
-          id?: string
-          inserted_at?: string
-          production_id?: string
-          profile_id?: string
-          title?: string
-          updated_at?: string
-        }
-      }
-      productions: {
-        Row: {
-          company_id: string
-          description: string
-          id: string
-          image_url: string | null
-          inserted_at: string
-          is_published: boolean
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          company_id: string
-          description: string
-          id?: string
-          image_url?: string | null
-          inserted_at?: string
-          is_published?: boolean
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          company_id?: string
-          description?: string
-          id?: string
-          image_url?: string | null
-          inserted_at?: string
-          is_published?: boolean
-          title?: string
-          updated_at?: string
-        }
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          biography: string | null
           email: string
           family_name: string
           given_name: string
           id: string
           inserted_at: string
-          is_public: boolean
+          role: Database["public"]["Enums"]["employee_role"]
           updated_at: string
         }
         Insert: {
-          avatar_url?: string | null
-          biography?: string | null
           email: string
           family_name: string
           given_name: string
-          id: string
+          id?: string
           inserted_at?: string
-          is_public?: boolean
+          role?: Database["public"]["Enums"]["employee_role"]
           updated_at?: string
         }
         Update: {
-          avatar_url?: string | null
-          biography?: string | null
           email?: string
           family_name?: string
           given_name?: string
           id?: string
           inserted_at?: string
-          is_public?: boolean
+          role?: Database["public"]["Enums"]["employee_role"]
           updated_at?: string
         }
       }
-      responses: {
+      equipment: {
         Row: {
+          equipment_type_id: string
           id: string
           inserted_at: string
-          is_accepted: boolean
-          message: string
-          profile_id: string
+          is_available: boolean
+          notes: string | null
           updated_at: string
-          vacancy_id: string
         }
         Insert: {
+          equipment_type_id: string
           id?: string
           inserted_at?: string
-          is_accepted: boolean
-          message: string
-          profile_id: string
+          is_available?: boolean
+          notes?: string | null
           updated_at?: string
-          vacancy_id: string
         }
         Update: {
+          equipment_type_id?: string
           id?: string
           inserted_at?: string
-          is_accepted?: boolean
-          message?: string
-          profile_id?: string
+          is_available?: boolean
+          notes?: string | null
           updated_at?: string
-          vacancy_id?: string
         }
       }
-      roles: {
+      equipment_types: {
+        Row: {
+          daily_price: number
+          deposit_price: number
+          description: string
+          hourly_price: number
+          id: string
+          image_url: string | null
+          inserted_at: string
+          name: string
+          updated_at: string
+          weekly_price: number
+        }
+        Insert: {
+          daily_price: number
+          deposit_price: number
+          description: string
+          hourly_price: number
+          id?: string
+          image_url?: string | null
+          inserted_at?: string
+          name: string
+          updated_at?: string
+          weekly_price: number
+        }
+        Update: {
+          daily_price?: number
+          deposit_price?: number
+          description?: string
+          hourly_price?: number
+          id?: string
+          image_url?: string | null
+          inserted_at?: string
+          name?: string
+          updated_at?: string
+          weekly_price?: number
+        }
+      }
+      hires: {
+        Row: {
+          end_at: string
+          equipment_id: string
+          id: string
+          inserted_at: string
+          is_collected: boolean
+          is_deposit_paid: boolean
+          is_deposit_returned: boolean
+          is_paid: boolean
+          is_returned: boolean
+          order_id: string
+          start_at: string
+          updated_at: string
+        }
+        Insert: {
+          end_at: string
+          equipment_id: string
+          id?: string
+          inserted_at?: string
+          is_collected?: boolean
+          is_deposit_paid?: boolean
+          is_deposit_returned?: boolean
+          is_paid?: boolean
+          is_returned?: boolean
+          order_id: string
+          start_at: string
+          updated_at?: string
+        }
+        Update: {
+          end_at?: string
+          equipment_id?: string
+          id?: string
+          inserted_at?: string
+          is_collected?: boolean
+          is_deposit_paid?: boolean
+          is_deposit_returned?: boolean
+          is_paid?: boolean
+          is_returned?: boolean
+          order_id?: string
+          start_at?: string
+          updated_at?: string
+        }
+      }
+      orders: {
+        Row: {
+          customer_id: string
+          id: string
+          inserted_at: string
+          is_online: boolean
+          updated_at: string
+        }
+        Insert: {
+          customer_id: string
+          id?: string
+          inserted_at?: string
+          is_online: boolean
+          updated_at?: string
+        }
+        Update: {
+          customer_id?: string
+          id?: string
+          inserted_at?: string
+          is_online?: boolean
+          updated_at?: string
+        }
+      }
+      products: {
         Row: {
           description: string
           id: string
           image_url: string | null
           inserted_at: string
-          is_published: boolean
-          slug: string
-          title: string
+          name: string
+          price: number
+          stock: number
           updated_at: string
         }
         Insert: {
@@ -331,9 +251,9 @@ export interface Database {
           id?: string
           image_url?: string | null
           inserted_at?: string
-          is_published?: boolean
-          slug: string
-          title: string
+          name: string
+          price: number
+          stock: number
           updated_at?: string
         }
         Update: {
@@ -341,132 +261,54 @@ export interface Database {
           id?: string
           image_url?: string | null
           inserted_at?: string
-          is_published?: boolean
-          slug?: string
-          title?: string
+          name?: string
+          price?: number
+          stock?: number
           updated_at?: string
         }
       }
-      subscriptions: {
+      purchases: {
         Row: {
-          category_id: string
-          inserted_at: string
-          profile_id: string
-          updated_at: string
-        }
-        Insert: {
-          category_id: string
-          inserted_at?: string
-          profile_id: string
-          updated_at?: string
-        }
-        Update: {
-          category_id?: string
-          inserted_at?: string
-          profile_id?: string
-          updated_at?: string
-        }
-      }
-      vacancies: {
-        Row: {
-          company_id: string
-          content: string | null
           id: string
           inserted_at: string
-          is_open: boolean
-          is_published: boolean
-          production_id: string | null
-          response_deadline: string | null
-          response_type: Database["public"]["Enums"]["response_type"]
-          title: string
+          is_cancelled: boolean
+          is_collected: boolean
+          is_delivered: boolean
+          is_paid: boolean
+          is_refunded: boolean
+          is_returned: boolean
+          order_id: string
+          product_id: string
+          quantity: number
           updated_at: string
         }
         Insert: {
-          company_id: string
-          content?: string | null
           id?: string
           inserted_at?: string
-          is_open?: boolean
-          is_published?: boolean
-          production_id?: string | null
-          response_deadline?: string | null
-          response_type?: Database["public"]["Enums"]["response_type"]
-          title: string
+          is_cancelled?: boolean
+          is_collected?: boolean
+          is_delivered?: boolean
+          is_paid?: boolean
+          is_refunded?: boolean
+          is_returned?: boolean
+          order_id: string
+          product_id: string
+          quantity: number
           updated_at?: string
         }
         Update: {
-          company_id?: string
-          content?: string | null
           id?: string
           inserted_at?: string
-          is_open?: boolean
-          is_published?: boolean
-          production_id?: string | null
-          response_deadline?: string | null
-          response_type?: Database["public"]["Enums"]["response_type"]
-          title?: string
+          is_cancelled?: boolean
+          is_collected?: boolean
+          is_delivered?: boolean
+          is_paid?: boolean
+          is_refunded?: boolean
+          is_returned?: boolean
+          order_id?: string
+          product_id?: string
+          quantity?: number
           updated_at?: string
-        }
-      }
-      vacancy_categories: {
-        Row: {
-          category_id: string
-          vacancy_id: string
-        }
-        Insert: {
-          category_id: string
-          vacancy_id: string
-        }
-        Update: {
-          category_id?: string
-          vacancy_id?: string
-        }
-      }
-      venues: {
-        Row: {
-          description: string
-          id: string
-          image_url: string | null
-          inserted_at: string
-          is_published: boolean
-          is_useradded: boolean
-          latitude: number
-          location: string
-          longitude: number
-          slug: string
-          title: string
-          updated_at: string
-          website: string | null
-        }
-        Insert: {
-          description: string
-          id?: string
-          image_url?: string | null
-          inserted_at?: string
-          is_published?: boolean
-          is_useradded?: boolean
-          latitude: number
-          location: string
-          longitude: number
-          slug: string
-          title: string
-          updated_at?: string
-          website?: string | null
-        }
-        Update: {
-          description?: string
-          id?: string
-          image_url?: string | null
-          inserted_at?: string
-          is_published?: boolean
-          is_useradded?: boolean
-          latitude?: number
-          location?: string
-          longitude?: number
-          slug?: string
-          title?: string
-          updated_at?: string
-          website?: string | null
         }
       }
     }
@@ -474,86 +316,10 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      authorize_company_member: {
-        Args: {
-          company_id: string
-          profile_id: string
-          role: Database["public"]["Enums"]["company_role"]
-        }
-        Returns: boolean
-      }
-      authorize_company_participant_member: {
-        Args: {
-          participant_id: string
-          profile_id: string
-          role: Database["public"]["Enums"]["company_role"]
-        }
-        Returns: boolean
-      }
-      authorize_company_production_member: {
-        Args: {
-          production_id: string
-          profile_id: string
-          role: Database["public"]["Enums"]["company_role"]
-        }
-        Returns: boolean
-      }
-      authorize_company_public: {
-        Args: {
-          company_id: string
-        }
-        Returns: boolean
-      }
-      authorize_company_vacancy_member: {
-        Args: {
-          vacancy_id: string
-          profile_id: string
-          role: Database["public"]["Enums"]["company_role"]
-        }
-        Returns: boolean
-      }
-      authorize_participant_public: {
-        Args: {
-          participant_id: string
-        }
-        Returns: boolean
-      }
-      authorize_production_public: {
-        Args: {
-          production_id: string
-        }
-        Returns: boolean
-      }
-      authorize_vacancy_public: {
-        Args: {
-          vacancy_id: string
-        }
-        Returns: boolean
-      }
-      create_company: {
-        Args: {
-          slug: string
-          name: string
-          description: string
-        }
-        Returns: string
-      }
-      update_company: {
-        Args: {
-          id: string
-          slug: string
-          name: string
-          description: string
-          main_colour: string
-          is_public: boolean
-        }
-        Returns: undefined
-      }
+      [_ in never]: never
     }
     Enums: {
-      company_role: "admin" | "moderator"
-      page_theme: "default" | "00productions"
-      response_type: "platform" | "email" | "phone"
+      employee_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never

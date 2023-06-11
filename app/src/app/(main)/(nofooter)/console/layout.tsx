@@ -8,12 +8,10 @@ import { getSingle } from "@/lib/supabase-type-convert";
 export const revalidate = 0;
 
 const Links = [
-  { href: "/", text: "Dashboard", active: false },
   { href: "/orders", text: "Orders", active: false },
   { href: "/customers", text: "Customers", active: false },
   { href: "/products", text: "Products", active: false },
   { href: "/equipment", text: "Equipment", active: false },
-  { href: "/settings", text: "Settings", active: false },
 ];
 
 export default async function AdminLayout({

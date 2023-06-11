@@ -25,7 +25,7 @@ export default async function Equipment() {
       is_available
       `
     );
-
+    
   const equipment = getArray(_equipment).map((equipment) => ({
     ...equipment,
     equipment_type: getSingle(equipment.equipment_type),

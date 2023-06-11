@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Database } from "../db-types.ts";
+import { getArray, getMaybeSingle } from "../type-convert.ts";
 
 type Equipment = {
   id: string;
@@ -123,19 +124,99 @@ serve(async (req) => {
 
     if (purchasesError) throw new Error(purchasesError.message);
 
-    // create the order hires
-    const { error: hiresError } = await supabaseAdminClient
-      .from("hires")
-      .insert(
-        payload.checkout.equipment.map((equipment) => ({
-          order_id: order.id,
-          equipment_id: equipment.id,
-          start_at: equipment.start_at,
-          end_at: equipment.end_at,
-        }))
-      );
+    // deduct the stock from the products
+    for (let i = 0; i < payload.checkout.products.length; i++) {
+      const { data: product, error: productError } = await supabaseAdminClient
+        .from("products")
+        .select("stock")
+        .eq("id", payload.checkout.products[i].id)
+        .single();
 
-    if (hiresError) throw new Error(hiresError.message);
+      if (productError) throw new Error(productError.message);
+
+      const newStock = product.stock - payload.checkout.products[i].quantity;
+
+      const { error: updateProductError } = await supabaseAdminClient
+        .from("products")
+        .update({ stock: newStock })
+        .eq("id", payload.checkout.products[i].id);
+
+      if (updateProductError) throw new Error(updateProductError.message);
+
+    }
+
+    
+    for (let i = 0; i < payload.checkout.equipment.length; i++) {
+      const startAt = new Date(payload.checkout.equipment[i].start_at);
+      const endAt = new Date(payload.checkout.equipment[i].end_at);
+
+      // get all equipment of the same type
+      const { data: _equipment, error: equipmentError } = await supabaseAdminClient
+        .from("equipment")
+        .select(`
+          id,
+          hires (
+            id,
+            start_at,
+            end_at
+          )
+        `)
+        .match({
+          equipment_type_id: payload.checkout.equipment[i].id,
+        });
+
+      const equipment = getArray(_equipment).map((equipment) => ({
+        id: equipment.id,
+        hires: getArray(equipment.hires),
+      }));
+
+      if (equipmentError) throw new Error(equipmentError.message);
+
+      // loop through each equipment and get the first available one
+      let availableEquipmentId = "";
+
+      for (let j = 0; j < equipment.length; j++) {
+        // check if equipment is available
+        let isAvailable = true;
+
+        for (let k = 0; k < equipment[j].hires.length; k++) {
+          
+
+          const hireStartAt = new Date(equipment[j].hires[k].start_at);
+          const hireEndAt = new Date(equipment[j].hires[k].end_at);
+          if (
+            (startAt >= hireStartAt && startAt <= hireEndAt) ||
+            (endAt >= hireStartAt && endAt <= hireEndAt)
+                       
+          ) {
+            // equipment is available
+          } else {
+            // equipment is not available
+            isAvailable = false;
+            break;
+          }
+        }
+
+        if (isAvailable) {
+          availableEquipmentId = equipment[j].id;
+          break;
+        }
+      }
+
+      if (!availableEquipmentId) throw new Error("No equipment available");
+
+      // create the order hires
+      const { error: hiresError } = await supabaseAdminClient
+        .from("hires")
+        .insert({
+          order_id: order.id,
+          equipment_id: availableEquipmentId,
+          start_at: startAt.toISOString(),
+          end_at: endAt.toISOString(),
+        });
+        
+      if (hiresError) throw new Error(hiresError.message);
+    }
 
     return new Response("done", { headers: corsHeaders });
   } catch (error) {

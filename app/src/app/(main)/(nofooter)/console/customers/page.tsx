@@ -3,6 +3,7 @@ import { createServerClient } from "@/lib/supabase-server";
 import { getArray } from "@/lib/supabase-type-convert";
 import { Tag } from "@/components/ui";
 import { AddCustomerModal } from "./AddCustomerModal";
+import { EditCustomerModal } from "./EditCustomerModal";
 
 // do not cache this page
 export const revalidate = 0;
@@ -92,9 +93,7 @@ export default async function Customers() {
                   </td>
 
                   <td className="px-4 text-right whitespace-nowrap">
-                    <Link href={`/console/customers/${customer.id}`} className="text-sm text-blue-600 hover:underline">
-                      View
-                    </Link>
+                    <EditCustomerModal customer={customer} customerId={customer.id}/>
                   </td>
                 </tr>
               ))}
