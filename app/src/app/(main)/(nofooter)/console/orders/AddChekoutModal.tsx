@@ -38,6 +38,71 @@ type Checkout = {
   customerId: string;
 }
 
+const PriceChecker = (equipment: Equipment[], products: Product[]) => {
+  const { supabase } = useSupabase();
+
+  const [price, setPrice] = useState<number>(0)
+  const [isLoaded, setIsLoaded] = useState<boolean>(false)
+
+  useEffect(() => {
+    const getPrice = async () => {
+      setIsLoaded(false)
+
+      // filter out equipment with no id, start_at or end_at
+      const newEquipment = equipment.filter((equipment) => equipment.id != null && equipment.start_at != null && equipment.end_at != null)
+
+      // filter out products with no id or quantity
+      const newProducts = products.filter((product) => product.id != null && product.quantity != null)
+
+      if (newEquipment.length === 0 && newProducts.length === 0) {
+        setIsLoaded(true)
+        setPrice(0)
+      } else {
+
+        console.log({
+          checkout: {
+            equipment: newEquipment,
+            products: newProducts,
+          }
+        })
+
+        const { data, error } = await supabase.functions.invoke("check-checkout", {
+          body: JSON.stringify({
+            checkout: {
+              equipment: newEquipment,
+              products: newProducts,
+            }
+          }),
+        });
+
+        if (data) {
+          console.log(data)
+          setPrice(data.total)
+          setIsLoaded(true)
+        }
+      }
+    }
+
+    const timeout = setTimeout(async () => {
+      getPrice()
+    }, 200);
+
+    return () => clearTimeout(timeout);
+  }, [equipment, products, supabase]);
+
+  return (
+    <p className="text-xl font-medium p-2 text-slate-900 dark:text-white">
+      {
+        isLoaded ? (
+          <>£{price/100}</>
+        ) : (
+          <>Loading...</>
+        )
+      }
+    </p>
+  )
+}
+
 export const CheckoutModal = () => {
   const { supabase } = useSupabase();
 
@@ -551,12 +616,14 @@ export const CheckoutModal = () => {
               )}
 
               <div className="text-right">
+                {PriceChecker(values.equipment, values.products)}
+
                 <Button variant="success" type="submit" className="mr-2">
                   Continue
                 </Button>
                 <Button variant="danger" onClick={toggleModal}>
-                Cancel
-              </Button>
+                  Cancel
+                </Button>
 
                 <div className="text-center">
                   {formError ? (
